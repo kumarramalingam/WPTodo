@@ -4,6 +4,10 @@ class Task extends MvcModel {
 
 	var $order = 'Task.task_name';
 	var $display_field = 'task_name';
+	var $table = '{prefix}wptodo_tasks';
+	var $includes = array('Project');
+	var $belongs_to = array('Project');
+		
 	/*var $wp_post = array(
 		'post_type' => array(
 			'fields' => array(
@@ -14,10 +18,12 @@ class Task extends MvcModel {
 	
 	var $validate = array(
 		// Use a custom regex for the validation
-		'project_name' => 'not_empty',
+		'task_name' => 'not_empty',
 		
 		// Use a predefined rule (which includes a generalized message)
 		'state' => 'not_empty',
+		
+		'due_date' => 'not_empty',
 		
 		'created' => 'not_empty'					
 	);

@@ -1,7 +1,7 @@
 <?php
 
 MvcConfiguration::set(array(
-	'Debug' => false
+	'Debug' => true
 ));
 
 MvcConfiguration::append(array(

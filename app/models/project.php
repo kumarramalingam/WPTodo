@@ -2,20 +2,21 @@
 
 class Project extends MvcModel {
 
-	var $order = 'Profile.project_name';
+	var $order = 'Project.project_name';
 	var $display_field = 'project_name';
+	var $table = '{prefix}wptodo_projects';
+		
 	/*var $wp_post = array(
 		'post_type' => array(
 			'fields' => array(
-				'post_content' => 'project_name'
+				'post_content' => 'task_name'
 			)
 		)
 	);*/
 	
-	var $validate = array(
+	var $validate = array(	
 		// Use a custom regex for the validation
 		'project_name' => 'not_empty',
-			
 		
 		// Use a predefined rule (which includes a generalized message)
 		'state' => 'not_empty',
@@ -25,6 +26,5 @@ class Project extends MvcModel {
 	
 	public function after_find($object) {
 		$object->name = trim($object->project_name);
-	}
-	
+	}	
 }

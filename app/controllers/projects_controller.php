@@ -15,19 +15,9 @@ class ProjectsController extends MvcPublicController {
 		$this->set_pagination($collection);
 	
 	}
-	
-	// Event selects only Speaker names and ids by default; to select all fields from Speaker,
-	// we'll overwrite the default show() method
-	public function show() {
-	
-		/*$object = $this->model->find_by_id($this->params['id'], array(
-			'includes' => array('Venue', 'Speaker' => array('selects' => 'Speaker.*'))
-		));
 		
-		if (!empty($object)) {
-			$this->set('object', $object);
-		}*/
-
-	}
-	
+	public function show() {
+		$this->load_model('Project');
+		$projects = $this->Project->find();
+    }	
 }

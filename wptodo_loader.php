@@ -11,8 +11,8 @@ class WptodoLoader extends MvcPluginLoader {
 		global $wpdb;
 	
 		$this->tables = array(
-			'wptodo_tasks' => $wpdb->prefix.'wptodo_tasks',
-			'wptodo_projects' => $wpdb->prefix.'wptodo_projects'
+			'wptodo_projects' => $wpdb->prefix.'wptodo_projects',
+			'wptodo_tasks' => $wpdb->prefix.'wptodo_tasks'
 		);
 	
 	}
@@ -37,7 +37,6 @@ class WptodoLoader extends MvcPluginLoader {
 		      state tinyint(2) default NULL,
 		      created datetime NOT NULL,
 			  modified datetime NOT NULL,
-			  post_id BIGINT(20),
 			  PRIMARY KEY (id)		      
 		      )';		
 			
@@ -54,19 +53,52 @@ class WptodoLoader extends MvcPluginLoader {
 			  due_date date NOT NULL,
 			  created datetime NOT NULL,
 			  modified datetime NOT NULL,
-			  post_id BIGINT(20),
 			  PRIMARY KEY  (id),			  
-			  FOREIGN KEY (project_id) REFERENCES '.$this->tables['wptodo_projects'].'(id),
+			  FOREIGN KEY (project_id) REFERENCES '.$this->tables['wptodo_projects'].'(id)
 			)';
 			
 		dbDelta($sql);	
+		$this->insert_example_data();
 		
-		$sql = 'ALTER TABLE '.$this->tables['wptodo_projects'].' ADD COLUMN post_id BIGINT(20)';
-		dbDelta($sql);
+	    }
 		
-		$sql = 'ALTER TABLE '.$this->tables['wptodo_tasks'].' ADD INDEX (post_id)';
-		dbDelta($sql);          
-						
+		function insert_example_data() {
+	
+		// Only insert the example data if no data already exists
+		
+		$sql = '
+			SELECT
+				id
+			FROM
+				'.$this->tables['wptodo_projects'].'
+			LIMIT
+				1';
+		$data_exists = $this->wpdb->get_var($sql);
+		if ($data_exists) {
+			return false;
+		}
+		
+		// Insert example data
+		 id int(11) NOT NULL auto_increment,
+		      user_id int(11) default NULL,
+		      project_name varchar(255) default NULL,
+		      state tinyint(2) default NULL,
+		      created datetime NOT NULL,
+			  modified datetime NOT NULL,
+		
+		$rows = array(
+			array(
+				'id' => 1,
+				'user_id' => 2,
+				'project_name' => 'Task 12',
+				'state' => '1',
+				'created' => '2011-06-17',
+				'modified' => '2011-06-18'				
+			));
+			foreach($rows as $row) {
+			$this->wpdb->insert($this->tables['projects'], $row);
+		}
+							
 	}
 
 	function deactivate() {
